@@ -6,8 +6,10 @@ namespace SkewShuffler
 {
     public class Shuffler<T>
     {
-        public double MaxInterval { get; private set; } // Total of all weightings
         private readonly List<ShuffleItem<T>> items;
+        private static Random randy = new Random();
+
+        public double MaxInterval { get; private set; } // Total of all weightings
 
         // Takes a random double within interval range
         public T this[double interval]
@@ -24,6 +26,8 @@ namespace SkewShuffler
                 throw new IndexOutOfRangeException("Interval out of bounds");
             }
         }
+
+        public double Next() => randy.NextDouble() * MaxInterval;
 
         internal Shuffler(List<ShuffleItem<T>> items, double max)
         {
