@@ -9,18 +9,23 @@ namespace SkewShuffler
         private double totalresources = 0; // Total of all resources needed for all items
         private double maxinterval = 0; // Total of all weightings
 
-        public ShuffleBuilder(Dictionary<T, double> items)
+        public ShuffleBuilder(Dictionary<T, double> items) : this(items, 0) { }
+
+        // Initialize a ShuffleBuilder with a bias offset
+        // An infinitely high bias offset would yield an equal change of all items being selected
+        public ShuffleBuilder(Dictionary<T, double> items, double biasoffset)
         {
             // Calculate total resources
             foreach (KeyValuePair<T, double> kvp in items)
             {
-                totalresources += kvp.Value;
+                totalresources += kvp.Value + biasoffset;
             }
 
             // Calculate individual weighting
             foreach (KeyValuePair<T, double> kvp in items)
             {
-                double _interval = totalresources / kvp.Value; // Weighting is total over invididual resources
+                // Weighting is total over individual resources, plus the bias offset
+                double _interval = totalresources / kvp.Value + biasoffset;
                 intervals.Add(kvp.Key, _interval);
                 maxinterval += _interval;
             }
